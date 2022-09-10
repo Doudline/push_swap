@@ -1,19 +1,26 @@
-SRCS =
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/07 11:39:26 by jhoule-l          #+#    #+#              #
+#    Updated: 2022/09/07 12:00:43 by jhoule-l         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-BONUS =
+SRCS = push_swap.c push_swap_args.c push_swap_utils.c push_swap_utils_2.c \
 
 OBJ = $(SRCS:%c=%o)
-OBJ_BONUS = $(BONUS:%c=%o)
 CC = gcc
 FLAGS = -Wall -Werror -Wextra
-NAME = push_swap.a
+NAME = push
 all: $(NAME)
 $(NAME): $(OBJ)
 	ar -rcs $(NAME) $(OBJ)
-bonus: $(OBJ) $(OBJ_BONUS)
-	ar -rcs $(NAME) $(OBJ) $(OBJ_BONUS)
 clean:
-	rm -f $(OBJ) $(OBJ_BONUS)
+	rm -f $(OBJ)
 fclean: clean
 	rm -f $(NAME)
 re: fclean all

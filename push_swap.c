@@ -3,93 +3,151 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
+/*   By: jhoule-l <jhoule-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 08:20:33 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/08/04 10:30:57 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/08 09:24:51 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	*swap(int *stack)
+int	ft_rotate(t_node **stack, int reverse, char *a_or_b)
 {
-	int temp;
+	t_node	*temp, *temp_prev;
 
-	temp = stack[0];
-	stack[0] = stack[1];
-	stack[1] = temp;
-	return (stack);
-}
-
-int	*rotate(int	*stack, int size, int reverse)
-{
-	int	i;
-	int	temp;
-
+	temp = *stack;
+	temp_prev = (*stack)->prev;
 	if (reverse == 0)
 	{
-		i = 0;
-		temp = stack[i];
-		while (i < size - 1)
-		{
-			stack[i] = stack[i + 1];
-			i++;
-		}
+		*stack = (*stack)->next;
+		temp_prev->next = temp;
+		(*stack)->prev = temp;
+
 	}
 	else
 	{
-		i = size - 1;
-		temp = stack[i];
-		while (i > 0)
-		{
-			stack[i] = stack[i - 1];
-			i--;
-		}
+		*stack = (*stack)->prev;
+		(*stack)->next = temp;
+		(*stack)->next->next->prev = temp;
 	}
-	stack[i] = temp;
-	return (stack);
+	if (reverse == 1)
+		printf("\nrr%s", a_or_b);
+	else
+		printf("\nr%s", a_or_b);
+	return (1);
 }
 
-int	push(int *stack_1, int *stack_2, int size)
+int	ft_swap(t_node **stack, char *a_or_b)
 {
-	int	i;
+	t_node	*temp;
 
-	stack_1[0] = stack_2[0];
-	i = 0;
-	while (i < size)
+	temp = malloc(sizeof(stack));
+	temp->nbr = (*stack)->nbr;
+	(*stack)->nbr = (*stack)->next->nbr;
+	(*stack)->next->nbr = temp->nbr;
+	free(temp);
+	printf("\ns%s", a_or_b);
+	return(1);
+}
+
+int	ft_push(t_node **stack_in, t_node **stack_out, t_var *master, char *a_or_b)
+{
+	t_node	*temp, *new;
+
+	if (a_or_b[0] == 'a')
 	{
-		stack_2[i] = stack_2[i + 1];
-		i++;
+		master->size_in = master->size_a;
+		master->size_a += 1;
+		master->size_b -= 1;
 	}
-	return (0);	
-}
+	else
+	{
+		master->size_in = master->size_b;
+		master->size_a -= 1;
+		master->size_b += 1;
+	}
+	temp = *stack_out;
+	new = malloc(sizeof(t_node));
+	new->nbr = (*stack_out)->nbr;
+	new->next = *stack_in;
+	if (master->size_in == 1)
+	{
+		new->prev = *stack_in;
+		(*stack_in)->next = new;
+		(*stack_in)->prev = new;
+	}	
+	else if (master->size_in != 0)
+	{
+		new->prev = (*stack_in)->prev;
+		(*stack_in)->prev->next = new;
+		(*stack_in)->prev = new;
+	}
+	*stack_in = new;
 
-int	*push_swap(int *a, int size)
+	*stack_out = (*stack_out)->next;
+	(*stack_out)->prev = temp->prev;
+	temp->prev->next = *stack_out ;
+	
+	temp = NULL;
+	free (temp);
+	printf("\np%s", a_or_b);
+	return(1);
+} 
+
+int	push_swap(t_var *master, int *initial_array)
 {
-	int *b;
-	int	*sorted_array;
-	int	i = -1;
+	t_node	*a, *b;
+	unsigned int	i;
 
-	b = malloc(size * 4);
-	/*sorted_array = sort_array(a, size);
-	while (++i < size)
-		printf("%d ", sorted_array[i]);
-	printf("\n"); */
-	push(b, a, size);
-	return (a);
-}
-
-int	main()
-{
-	int	a[] = {47, -2, 600, 1, -12, 555};
-	int size = sizeof(a)/4;
-	int	i = -1;
-	while (++i < size)
-		printf("%d ", a[i]);
-	printf("\n");
-	push_swap(a, size);
+	master->sorted_array = sort_array(initial_array, master->size_a);
+	a = array_to_list(initial_array, master->size_a);
+	master->ops = 0;
+	master->size_b = 0;
 	i = -1;
-	while (++i < size)
-		printf("%d ", a[i]);
+	if (is_it_ordered(a, master->size_a, master->sorted_array, 0) == 1)
+	{
+		printf("\nThe list is ordered");
+		return (0);
+	}
+	ft_push(&b, &a, master, "b");
+//	if (master->size_a <= 3)
+//		three_args(&a, size_a, 0, sorted_array, &ops);	
+//	else if (master->size_a == 4 || size_a == 5)
+//		master->size_b = five_args(&a, &b, &size_a, sorted_array, &ops);
+//	master->size_b = hundred_args(&a, &b);
+//	printf("\nNumber of operations: %u", master->ops);
+	printf("\nA: ");	
+	i = -1;
+	while (++i < master->size_a)
+	{
+		printf("%d ", a->nbr);
+		a = a->next;
+	}	
+	printf("\nB: ");
+	i = -1;
+	while (++i < master->size_b)
+	{
+		printf("%d ", b->nbr);
+		b = b->next;
+	} 
+	return (0); 
+}
+
+int	main(int argc, char **argv)
+{
+	int	*initial_array;
+	int	i;
+	t_var *master;
+
+	master = malloc(sizeof(t_var));
+	initial_array = malloc(sizeof(int) * argc);
+	master->original_size = argc - 1;
+	master->size_a = argc - 1;
+	i = -1;
+	while (++i < argc - 1)
+	{
+		initial_array[i] = atoi(argv[i + 1]); 		//attention atoi!
+	}
+	push_swap(master, initial_array); 
 }
