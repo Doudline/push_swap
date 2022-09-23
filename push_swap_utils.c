@@ -6,7 +6,7 @@
 /*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 11:41:35 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/08 09:08:21 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/21 11:03:51 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,11 @@ int	is_it_in_array(int nbr, int *sorted_array, unsigned int start_index,
 	return (0);
 }
 
-int	is_it_ordered(t_node *stack, unsigned int size, int *sorted_array,
-	   		unsigned int index)
+int	is_it_ordered(t_node *stack, t_var *master, unsigned int size, unsigned int index)
 {
 	while (index < size && stack)
 	{
-		if (stack->nbr != sorted_array[index])
+		if (stack->nbr != master->sorted_array[index])
 			return (0);
 		stack = stack->next;
 		index++;

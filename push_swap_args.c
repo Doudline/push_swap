@@ -6,104 +6,87 @@
 /*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 08:47:38 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/08 08:52:15 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/23 12:33:27 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-unsigned int	hundred_args(t_node **stack_a, t_node **stack_b)
+void	hundred_args(t_node **stack_a, t_node **stack_b, t_var *master)
 {
 	t_node *temp;
-	unsigned int	size_b = 0;
-	unsigned int 	original_size = *size_a;
 	unsigned int	i;
-	unsigned int	lower_bound = 0;
-	unsigned int	upper_bound = 0;
-	unsigned int	quantile = 0;
-
-	while (is_it_ordered(*stack_a, *size_a, sorted_array, 0) != 1)
+	unsigned int	o;
+	i = 0;
+	o = 0;
+	master->quantile = master->original_size / 3;
+	master->lower_bound = master->sorted_array[0];
+	while (i < master->quantile)
 	{
-		quantile += *size_a / 2;
-		lower_bound = sorted_array[quantile - 5];
-		upper_bound = sorted_array[quantile - 1];
-		while (size_b < 5)	
-		{
-			temp = *stack_a;
-			if ((*stack_a)->nbr <= upper_bound && (*stack_a)->nbr >= lower_bound)
-				*ops += ft_push(stack_b, stack_a, &size_b, size_a, "b");		
-			else
-			{
-				i = 0;
-				while (is_it_in_array(temp->nbr, sorted_array, quantile - 5, quantile) != 1)
-				{
-					temp = temp->next;
-					i++;
-				}
-				if (i < *size_a/2)
-				{	
-					while (i-- > 0)
-						*ops += ft_rotate(stack_a, 0, "a");
-				}
-				else
-				{
-					while (i++ < *size_a)
-						*ops += ft_rotate(stack_a, 1, "a");
-				}
-			}
-		}
-		sort_and_push(stack_b, stack_a, &size_b, size_a, ops);	
+		master->moves_beg = moves_from_beginning(*stack_a, master);
+		master->moves_end = moves_from_end(*stack_a, master);
+		moves_pusher(stack_a, stack_b, master);	
+		i++;
 	}
-	return (size_b);	
-}
-
-unsigned int	five_args(t_node **stack_a, t_node **stack_b,  unsigned int *size_a,
-	   		int *sorted_array, unsigned int *ops)
-{
-	int	median;
-	unsigned int	size_b = 0;
-	unsigned int	original_size = *size_a;
-
-	median = sorted_array[(original_size)/2];
-	printf("Median = %d", median);
-	while (size_b < original_size/2)
+	sort_and_push(stack_b, stack_a, master);
+	master->lower_bound = master->sorted_array[master->quantile];
+	master->quantile += master->original_size / 3;
+	while (i < master->quantile)
 	{
-		if ((*stack_a)->nbr < median)
-			*ops += ft_push(stack_b, stack_a, &size_b, size_a, "b");
-		else
-		{
-			if ((*stack_a)->next->nbr < median)
-				*ops += ft_rotate(stack_a, 0, "a");
-			else
-				*ops += ft_rotate(stack_a, 1, "a");	
-		} 
+		master->moves_beg = moves_from_beginning(*stack_a, master);
+		master->moves_end = moves_from_end(*stack_a, master);
+		moves_pusher(stack_a, stack_b, master);	
+		i++;
 	}
-	three_args(stack_a, *size_a, size_b, sorted_array, ops);
-	three_args(stack_b, size_b, *size_a, sorted_array, ops);
-	while (size_b > 0)
-		*ops += ft_push(stack_a, stack_b, size_a, &size_b, "a");
-	return (size_b);
+	while ((*stack_a)->prev->nbr >= master->lower_bound)
+		master->ops += ft_rotate(stack_a, 1, "a");
+	sort_and_push(stack_b, stack_a, master);
+	while (i++ < master->original_size)
+		master->ops += ft_push(stack_b, stack_a, master, "b");
+	sort_and_push(stack_b, stack_a, master);
 } 
 
-void	three_args(t_node **stack, unsigned int size_stack, unsigned int size_other, int *sorted_array,
-			unsigned int *ops)
+void	five_args(t_node **stack_a, t_node **stack_b, t_var *master)
 {
-	if (size_stack < size_other)
+	master->original_size = master->size_a;
+	master->median = (master->sorted_array)[(master->original_size)/2];
+	printf("Median = %d %d", master->median, master->original_size/2);
+	while (master->size_b < master->original_size/2)
 	{
-		if (is_it_ordered(*stack, size_stack, sorted_array, 0) == 0)
+		if ((*stack_a)->nbr < master->median)
+			master->ops += ft_push(stack_b, stack_a, master, "b");
+		else
+		{
+			if ((*stack_a)->next->nbr < master->median)
+				master->ops += ft_rotate(stack_a, 0, "a");
+			else
+				master->ops += ft_rotate(stack_a, 1, "a");	
+		} 
+	}
+	three_args(stack_a, master, "a");
+	three_args(stack_b, master, "b");
+	while (master->size_b > 0)
+		master->ops += ft_push(stack_a, stack_b, master, "a");
+} 
+
+void	three_args(t_node **stack, t_var *master, char *a_or_b)
+{
+	if (a_or_b[0] == 'b')
+	{
+		if (is_it_ordered(*stack, master, master->size_b,  0) == 0)	// on veut renvoyer b en sens inverse, donc on cherche retour 0
 			return;
 		else
 		{
-			*ops += ft_swap(stack, "b");
+			master->ops += ft_swap(stack, "b");
 			return;
 		}
 	}
-	while (is_it_ordered(*stack, size_stack + size_other, sorted_array, size_other) != 1)
+	while (is_it_ordered(*stack, master, master->original_size, master->size_b) != 1)
 	{
 		if ((*stack)->nbr > (*stack)->next->nbr)
-			*ops += ft_swap(stack, "a");
+			master->ops += ft_swap(stack, "a");
 		else
-			*ops += ft_rotate(stack, 1, "a");
+			master->ops += ft_rotate(stack, 1, "a");
 	}
 	
 }
