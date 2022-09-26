@@ -6,7 +6,7 @@
 /*   By: jhoule-l <jhoule-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 08:20:33 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/21 10:18:38 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/26 10:12:13 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	push_swap(t_var *master, int *initial_array)
 		three_args(&a, master, "a");
 	else if (master->size_a == 4 || master->size_a == 5)
 		five_args(&a, &b, master);
-	else if (master->size_a > 5 && master->size_a <= 100)
+	else if (master->size_a > 5 && master->size_a <= 500)
 		hundred_args(&a, &b, master);
 	printf("\nNumber of operations: %u", master->ops);
 	printf("\nA: ");	
@@ -51,6 +51,16 @@ int	push_swap(t_var *master, int *initial_array)
 	return (0); 
 }
 
+void	parsing(int *initial_array, int argc)
+{
+	int	i;
+	int	o;
+
+	i = -1;
+	o = -1;
+	while (
+}
+
 int	main(int argc, char **argv)
 {
 	int	*initial_array;
@@ -66,5 +76,6 @@ int	main(int argc, char **argv)
 	{
 		initial_array[i] = atoi(argv[i + 1]); 		//attention atoi!
 	}
+	
 	push_swap(master, initial_array); 
 }

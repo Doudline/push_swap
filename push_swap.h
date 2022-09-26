@@ -6,7 +6,7 @@
 /*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 09:02:53 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/23 08:41:17 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/26 09:25:07 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ typedef struct s_var
 	int				quantile;
 }	t_var;
 
+void	solve_five_hundred(t_node **stack_a, t_node **stack_b, t_var *master);
+void	solve_hundred(t_node **stack_a, t_node **stack_b, t_var *master);
 void	moves_pusher(t_node **stack_a, t_node **stack_b, t_var *master);
 int		moves_from_beginning(t_node *stack, t_var *master);
 int		moves_from_end(t_node *stack, t_var *master);
@@ -68,7 +70,7 @@ void			adjust_moves(t_var *master, t_node **stack_b);
 unsigned int	smart_rotate(t_var *master, t_node **stack_b);
 int				find_median(unsigned int size, t_node *stack);
 
-int		find_min_max(t_node *stack, int min_or_max, unsigned int size);
+int					find_min_max(t_node *stack, int min_or_max, unsigned int size);
 int					is_it_in_array(int nbr, int *sorted_array, unsigned int start_index, unsigned int end_index);
 int					is_it_ordered(t_node *stack, t_var *master, unsigned int size, unsigned int index);
 t_node				*array_to_list(int *initial_array, unsigned int size);

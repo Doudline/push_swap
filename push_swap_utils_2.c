@@ -6,7 +6,7 @@
 /*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 08:26:52 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/23 10:06:24 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/09/26 07:52:39 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	sort_and_push(t_node **stack_b, t_node **stack_a, t_var *master)
 	master->min = 0;
 	master->max = 0;
 	median = find_median(master->size_b, *stack_b);
+	printf("%d\n", median);
 	i = master->size_b;
 	while (master->size_b > 0)
 	{
@@ -27,7 +28,7 @@ void	sort_and_push(t_node **stack_b, t_node **stack_a, t_var *master)
 		master->max = find_min_max(*stack_b, 1, master->size_b); 
 		find_moves(master, stack_b);
 		master->ops += ft_push(stack_a, stack_b, master, "a");
-		if ((*stack_a)->nbr	< median)
+		if ((*stack_a)->nbr	== master->min)
 		{
 			master->ops += ft_rotate(stack_a, 0, "a");
 			i--;
