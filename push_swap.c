@@ -6,7 +6,7 @@
 /*   By: jhoule-l <jhoule-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 08:20:33 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/26 10:12:13 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/10/06 11:04:50 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,31 +51,35 @@ int	push_swap(t_var *master, int *initial_array)
 	return (0); 
 }
 
-void	parsing(int *initial_array, int argc)
-{
-	int	i;
-	int	o;
-
-	i = -1;
-	o = -1;
-	while (
-}
-
 int	main(int argc, char **argv)
 {
 	int	*initial_array;
 	int	i;
 	t_var *master;
 
+	if (argc < 2)
+	{
+		printf("\n");
+		return (0);
+	}
+//	printf("%d", is_split_needed(argv[1]));
+	if (is_split_needed(argv[1]) == 1)
+		argv = ft_split(argv[1], ' ', &argc);
+	if (non_integer(argc, argv) == 1)
+	{
+		printf("Error\n");
+		return (0);
+	}
+	if (int_limit(argc, argv) == 1)
+	{
+		printf("Error2\n");
+		return (0);
+	}
+	
+	initial_array = create_initial_array(argc, argv); 		
 	master = malloc(sizeof(t_var));
-	initial_array = malloc(sizeof(int) * argc);
 	master->original_size = argc - 1;
 	master->size_a = argc - 1;
 	i = -1;
-	while (++i < argc - 1)
-	{
-		initial_array[i] = atoi(argv[i + 1]); 		//attention atoi!
-	}
-	
 	push_swap(master, initial_array); 
 }

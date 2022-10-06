@@ -6,7 +6,7 @@
 /*   By: jhoule-l <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 09:02:53 by jhoule-l          #+#    #+#             */
-/*   Updated: 2022/09/26 09:25:07 by jhoule-l         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:48:44 by jhoule-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef struct s_node
 {
@@ -47,6 +48,16 @@ typedef struct s_var
 	int				quantile;
 }	t_var;
 
+int	int_limit(int argc, char **argv);
+int	non_integer(int argc, char **argv);
+int	duplicates(int argc, int *initial_array);
+int	*create_initial_array(int argc, char **argv);
+long long	ft_atoi(const char *str);
+
+int	is_split_needed(char const *argv);
+char **ft_split(char const *s, char sep, int *argc);
+static int	ft_count_words(char const *s, char sep);
+
 void	solve_five_hundred(t_node **stack_a, t_node **stack_b, t_var *master);
 void	solve_hundred(t_node **stack_a, t_node **stack_b, t_var *master);
 void	moves_pusher(t_node **stack_a, t_node **stack_b, t_var *master);
@@ -75,5 +86,9 @@ int					is_it_in_array(int nbr, int *sorted_array, unsigned int start_index, uns
 int					is_it_ordered(t_node *stack, t_var *master, unsigned int size, unsigned int index);
 t_node				*array_to_list(int *initial_array, unsigned int size);
 int					*sort_array(int *stack, unsigned int size);
+
+size_t	ft_strlen(const char *s);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	*ft_calloc(size_t count, size_t size);
 
 #endif
